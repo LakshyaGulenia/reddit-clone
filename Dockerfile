@@ -11,6 +11,28 @@
 #CMD ["npm","run","dev"]
 
 # Use a lightweight Node.js image
+#FROM node:19-alpine3.15
+
+# Set working directory
+#WORKDIR /reddit-k8s
+
+# Copy package.json and package-lock.json to the container
+#COPY package*.json ./
+
+# Install dependencies with legacy-peer-deps to resolve peer conflicts
+#RUN npm install --legacy-peer-deps
+
+# Copy the entire application code to the container
+#COPY . .
+
+# Expose the application port
+#EXPOSE 3000
+
+# Start the application in production mode
+#CMD ["npm", "run", "dev"]
+
+
+# Use a lightweight Node.js image
 FROM node:19-alpine3.15
 
 # Set working directory
@@ -19,8 +41,12 @@ WORKDIR /reddit-k8s
 # Copy package.json and package-lock.json to the container
 COPY package*.json ./
 
-# Install dependencies with legacy-peer-deps to resolve peer conflicts
-RUN npm install --legacy-peer-deps
+# Clean npm cache and install dependencies with legacy-peer-deps to resolve peer conflicts
+RUN npm cache clean --force && \
+    npm install --legacy-peer-deps
+
+# Install @chakra-ui/system separately (if not installed correctly)
+RUN npm install @chakra-ui/system
 
 # Copy the entire application code to the container
 COPY . .
