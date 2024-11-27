@@ -45,8 +45,8 @@ COPY package*.json ./
 RUN npm cache clean --force && \
     npm install --legacy-peer-deps
 
-# Install @chakra-ui/system separately (if not installed correctly)
-RUN npm install @chakra-ui/system
+# Install @chakra-ui/system with legacy-peer-deps to avoid conflict
+RUN npm install @chakra-ui/system --legacy-peer-deps
 
 # Copy the entire application code to the container
 COPY . .
@@ -56,5 +56,6 @@ EXPOSE 3000
 
 # Start the application in production mode
 CMD ["npm", "run", "dev"]
+
 
 
